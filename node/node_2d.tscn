@@ -1,0 +1,49 @@
+[gd_scene load_steps=6 format=3 uid="uid://dk0j5ogq6k0fa"]
+
+[ext_resource type="PackedScene" uid="uid://e4ry1tyldlu0" path="res://node/player.tscn" id="1_nx3aj"]
+[ext_resource type="PackedScene" uid="uid://cwhnkv20axd2n" path="res://node/time_keeper.tscn" id="2_m0v6l"]
+[ext_resource type="Script" path="res://DebugHUD.cs" id="3_s0ily"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_70p8v"]
+size = Vector2(478, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_omoqg"]
+size = Vector2(2, 184)
+
+[node name="Node2D" type="Node2D"]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(-3, 77)
+shape = SubResource("RectangleShape2D_70p8v")
+
+[node name="Player" parent="." instance=ExtResource("1_nx3aj")]
+position = Vector2(-128, 0)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(3.7, 3.7)
+
+[node name="Mirror" type="Area2D" parent="."]
+position = Vector2(0, -4)
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Mirror"]
+position = Vector2(0, 5)
+shape = SubResource("RectangleShape2D_omoqg")
+
+[node name="TimeKeeper" parent="." instance=ExtResource("2_m0v6l")]
+
+[node name="Panel" type="Panel" parent="."]
+offset_left = -154.0
+offset_top = -85.0
+offset_right = 23.0
+offset_bottom = -34.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Panel"]
+layout_mode = 0
+offset_right = 161.0
+offset_bottom = 48.0
+script = ExtResource("3_s0ily")
+
+[connection signal="body_entered" from="Mirror" to="Player" method="OnMirrorEnter"]

@@ -1,0 +1,37 @@
+[gd_scene load_steps=8 format=3 uid="uid://cyw66y6oaddlv"]
+
+[ext_resource type="Script" path="res://BackwardsPlayer.cs" id="1_bih44"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_vpal4"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_5kg03"]
+
+[sub_resource type="Gradient" id="Gradient_8p3oa"]
+colors = PackedColorArray(0.545098, 0, 0, 1, 1, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_nspk3"]
+gradient = SubResource("Gradient_8p3oa")
+
+[sub_resource type="Gradient" id="Gradient_n7tf3"]
+colors = PackedColorArray(0, 0, 0.541176, 1, 0, 0, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_k3fld"]
+gradient = SubResource("Gradient_n7tf3")
+
+[node name="BackwardsPlayer" type="CharacterBody2D"]
+collision_layer = 2
+script = ExtResource("1_bih44")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_vpal4")
+
+[node name="RedShape" type="MeshInstance2D" parent="."]
+scale = Vector2(14.43, 14.43)
+mesh = SubResource("CapsuleMesh_5kg03")
+texture = SubResource("GradientTexture1D_nspk3")
+
+[node name="BlueShape" type="MeshInstance2D" parent="."]
+visible = false
+scale = Vector2(14.43, 14.43)
+mesh = SubResource("CapsuleMesh_5kg03")
+texture = SubResource("GradientTexture1D_k3fld")
