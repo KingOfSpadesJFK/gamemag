@@ -23,7 +23,7 @@ public partial class Player : CharacterBody2D
 
 	public override void _Ready()
 	{
-		_timeKeeper = GetNode<TimeKeeper>("/root/Node2D/TimeKeeper");
+		_timeKeeper = GetNode<TimeKeeper>("/root/Control/TimeKeeper");
 	}
 
 	public override void _PhysicsProcess(double delta)

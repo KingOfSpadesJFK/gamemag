@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Linq;
 
+// This class keeps track of the time and records the player's position.
 public partial class TimeKeeper : Node
 {
 	public bool Inverted { get => _invert; }
@@ -21,6 +22,7 @@ public partial class TimeKeeper : Node
 		_positionRecordings = new Recording<Vector2>[0];
 	}
 
+	// Every physics tick, update the time.
 	public override void _PhysicsProcess(double delta)
 	{
 		if (_invert) {
@@ -30,6 +32,7 @@ public partial class TimeKeeper : Node
 		}
 	}
 
+	// Inverts the recordings and the time direction.
 	public void Invert() {
 		GD.Print("Inverting time to " + (_invert ? "forward" : "backward") + "!");
 		foreach (var recording in _positionRecordings) {
@@ -38,9 +41,9 @@ public partial class TimeKeeper : Node
 		_invert = !_invert;
 	}
 
+	// Add the passed recording to the list of recordings.
 	public void AddRecording(Recording<Vector2> recording)
 	{
-		// Add the recording to the list of recordings.
 		_positionRecordings = _positionRecordings.Concat(new Recording<Vector2>[] { recording }).ToArray();
 		_recordingCount++;
 	}
