@@ -11,7 +11,8 @@ using System;
 
 public partial class Player : CharacterBody2D
 {
-	public const float Speed = 300.0f;
+	[Export]
+	public const float Speed = 150.0f;
 	public const float JumpVelocity = -400.0f;
 
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -35,8 +36,9 @@ public partial class Player : CharacterBody2D
 			velocity.Y += gravity * (float)delta;
 
 		// Handle Jump.
-		if (Input.IsActionJustPressed("ui_accept") && IsOnFloor())
+		if (Input.IsActionJustPressed("ui_accept") && IsOnFloor()) {
 			velocity.Y = JumpVelocity;
+		}
 
 		// Get the input direction and handle the movement/deceleration.
 		// As good practice, you should replace UI actions with custom gameplay actions.
@@ -49,7 +51,7 @@ public partial class Player : CharacterBody2D
 		}
 		else
 		{
-			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
+			velocity.X = Mathf.MoveToward(Velocity.X, 0, 15);
 		}
 
 		Velocity = velocity;
