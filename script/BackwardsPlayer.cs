@@ -8,7 +8,7 @@ using System;
 // Self crossed while
 // reflecting time, witness
 // yourself reverse.
-public partial class BackwardsPlayer : CharacterBody2D
+public partial class BackwardsPlayer : Player
 {
 	private Recording<Vector2> _recording;	// 60 ticks per second for 10 minutes
 

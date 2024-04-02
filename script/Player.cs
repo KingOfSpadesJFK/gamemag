@@ -58,23 +58,22 @@ public partial class Player : CharacterBody2D
 		MoveAndSlide();
 
 		// Record the player's position every 1/60th of a second.
-		_recording.Push(Position);
+		_recording.Append(Position);
 	}
 
 	private void OnMirrorEnter(Node2D body)
 	{
-		if (body is BackwardsPlayer)
-			return;
+		if (body is Player and not BackwardsPlayer) {
+			var bPlayer = _backwardsPlayerScene.Instantiate<BackwardsPlayer>();
+			bPlayer.SetColor(_timeKeeper.Inverted);
+			bPlayer.SetRecording(_recording);
+			GetParent().AddChild(bPlayer);
+			Position += 5.0f * _direction;
+			_timeKeeper.AddRecording(_recording);
 
-		var bPlayer = _backwardsPlayerScene.Instantiate<BackwardsPlayer>();
-		bPlayer.SetColor(_timeKeeper.Inverted);
-		bPlayer.SetRecording(_recording);
-		GetParent().AddChild(bPlayer);
-		Position += 5.0f * _direction;
-		_timeKeeper.AddRecording(_recording);
-
-		_recording = new Recording<Vector2>();
-		_timeKeeper.Invert();
+			_recording = new Recording<Vector2>();
+			_timeKeeper.Invert();
+		}
 	}
 
 	private void OnMirrorExit(Rid body_rid, Node2D body, long body_shape_index, long local_shape_index)

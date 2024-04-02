@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://cyw66y6oaddlv"]
 
-[ext_resource type="Script" path="res://BackwardsPlayer.cs" id="1_bih44"]
+[ext_resource type="Script" path="res://script/BackwardsPlayer.cs" id="1_bih44"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_vpal4"]
 
@@ -19,7 +19,7 @@ colors = PackedColorArray(0, 0, 0.541176, 1, 0, 0, 1, 1)
 gradient = SubResource("Gradient_n7tf3")
 
 [node name="BackwardsPlayer" type="CharacterBody2D"]
-collision_layer = 2
+collision_layer = 4
 script = ExtResource("1_bih44")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

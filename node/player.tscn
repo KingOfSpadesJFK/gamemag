@@ -1,18 +1,21 @@
 [gd_scene load_steps=4 format=3 uid="uid://e4ry1tyldlu0"]
 
-[ext_resource type="Script" path="res://Player.cs" id="1_ju1ap"]
+[ext_resource type="Script" path="res://script/Player.cs" id="1_n8lsw"]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_vpal4"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_th4tk"]
+size = Vector2(14, 20)
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_5kg03"]
 
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 2
-script = ExtResource("1_ju1ap")
+script = ExtResource("1_n8lsw")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CapsuleShape2D_vpal4")
+position = Vector2(0, 4)
+shape = SubResource("RectangleShape2D_th4tk")
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="."]
-scale = Vector2(14.43, 14.43)
+position = Vector2(0, -0.214998)
+scale = Vector2(14.43, 14.215)
 mesh = SubResource("CapsuleMesh_5kg03")
