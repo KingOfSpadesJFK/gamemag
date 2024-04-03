@@ -17,6 +17,7 @@ public partial class TimeKeeper : Node
 	public int Minutes { get => _time / MAX_MINUTE_TICKS; }
 	public int Seconds { get => Ticks / 60; }
 	public int Ticks { get => _time % MAX_MINUTE_TICKS; }
+	public float TimeProgress { get => (float)_time / TIMEOUT_MAX; }
 	private int _time = STARTING_MINUTE * MAX_MINUTE_TICKS;
 	private bool _invert = false;
 	private int _recordingCount = 0;
@@ -29,8 +30,8 @@ public partial class TimeKeeper : Node
 	{
 	}
 
-	// Every physics tick, update the time.
-	public override void _PhysicsProcess(double delta)
+    // Every physics tick, update the time.
+    public override void _PhysicsProcess(double delta)
 	{
 		if (_invert) {
 			_time--;
