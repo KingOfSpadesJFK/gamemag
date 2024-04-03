@@ -24,10 +24,17 @@ public partial class Player : CharacterBody2D
 
 	public override void _Ready()
 	{
-		_timeKeeper = GetNode<TimeKeeper>("/root/Control/TimeKeeper");
+		_timeKeeper = GetNode<TimeKeeper>(Gamemag.TimeKeeperPath);
 	}
 
-	public override void _PhysicsProcess(double delta)
+    public override void _Process(double delta)
+    {
+		if (Input.IsActionJustPressed("debug.invert_time")) {
+			OnMirrorEnter(this);
+		}
+    }
+
+    public override void _PhysicsProcess(double delta)
 	{
 		Vector2 velocity = Velocity;
 
@@ -69,7 +76,7 @@ public partial class Player : CharacterBody2D
 			bPlayer.SetRecording(_recording);
 			GetParent().AddChild(bPlayer);
 			Position += 5.0f * _direction;
-			_timeKeeper.AddRecording(_recording);
+			// _timeKeeper.AddRecording(_recording);
 
 			_recording = new Recording<Vector2>();
 			_timeKeeper.Invert();

@@ -1,16 +1,18 @@
-[gd_scene load_steps=4 format=3 uid="uid://cxy5j2fhypeid"]
+[gd_scene load_steps=5 format=3 uid="uid://cxy5j2fhypeid"]
 
+[ext_resource type="Script" path="res://script/Gamemag.cs" id="1_njikm"]
 [ext_resource type="PackedScene" uid="uid://dk0j5ogq6k0fa" path="res://node/node_2d.tscn" id="1_tlcgk"]
 [ext_resource type="Script" path="res://script/DebugHUD.cs" id="1_x82cr"]
 [ext_resource type="PackedScene" uid="uid://cwhnkv20axd2n" path="res://node/time_keeper.tscn" id="3_joja7"]
 
-[node name="Control" type="Control"]
+[node name="Gamemag" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_njikm")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]
 layout_mode = 0

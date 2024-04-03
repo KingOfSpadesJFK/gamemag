@@ -11,10 +11,12 @@ using System;
 public partial class BackwardsPlayer : Player
 {
 	private Recording<Vector2> _recording;	// 60 ticks per second for 10 minutes
+	private TimeKeeper _timeKeeper;
 
 	public override void _Ready()
 	{
-		// GD.Print("BackwardsPlayer is ready!");
+		_timeKeeper = GetNode<TimeKeeper>(Gamemag.TimeKeeperPath);
+		_timeKeeper.InvertTime += OnTimeInversion;
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -41,6 +43,11 @@ public partial class BackwardsPlayer : Player
 	public void SetRecording(Recording<Vector2> recording)
 	{
 		_recording = recording;
+	}
+
+	private void OnTimeInversion()
+	{
+		_recording.Invert();
 	}
 
 	private void OnMirrorEnter(Node2D body)

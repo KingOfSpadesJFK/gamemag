@@ -63,4 +63,3 @@ scale = Vector2(32, 32)
 mesh = SubResource("BoxMesh_whasr")
 
 [connection signal="body_entered" from="Mirror" to="Player" method="OnMirrorEnter"]
-[connection signal="body_entered" from="Mirror" to="ReversibleRigidBody2D" method="OnMirrorEnter"]

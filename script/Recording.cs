@@ -11,16 +11,18 @@ public class Recording<T>
 	private const int MAX_BUFFER_MINUTES = 20;
 	private const int BUFFER_MID = 10;
 
-	public bool Inverted { get; }
+	public bool Inverted { get => _invert; }
 	public bool EndOfRecording { get => _time >= _end; }
-	public bool StartOfRecording { get => _time < _start; }
+	public bool StartOfRecording { get => _time <= _start; }
 	public int TimeTicks { get => InTicks(_time); }
 	public int TimeMinutes { get => InMinutes(_time); }
 	public int LengthTicks { get => InTicks(_end - _start); }
 	public int LengthMinutes { get => InMinutes(_end - _start); }
+	public int StartPoint { get => _start; }
+	public int EndPoint { get => _end; }	
 
 	private int _time = 0;
-	private int _end = -1;
+	private int _end = 0;
 	private int _start = 0;
 	private T[][] _recordingBuffer = new T[MAX_BUFFER_MINUTES][];    // BUFFER_MID minutes
 	private bool _invert = false;
@@ -48,10 +50,18 @@ public class Recording<T>
 		var minutes = TimeMinutes;
 		_recordingBuffer[TimeMinutes+BUFFER_MID][TimeTicks] = data;
 		TickUpdate(_invert);
+
+		// Create a new buffer for the next minute if it doesn't exist
 		if (TimeMinutes != minutes && _recordingBuffer[TimeMinutes+BUFFER_MID] is null) {
 			_recordingBuffer[TimeMinutes+BUFFER_MID] = new T[MAX_BUFFER_TICKS];
 		}
-		SetEndPoint(_invert);
+
+		// Push back one of the end points if the index is out of bounds
+		if (!_invert) {
+			if (EndOfRecording   && _time <= MAX_TIME) _end = _time;
+		} else {
+			if (StartOfRecording && _time >  MIN_TIME) _start = _time;
+		}
 	}
 
 	private void TickUpdate(bool inverted) {
@@ -114,11 +124,23 @@ public class Recording<T>
 	/// Otherwise, this will set the ending index to the current time.
 	/// </param>
 	public void SetEndPoint(bool inverted) {
+		GD.Print("Setting end point to " + _time + "!");
 		if (!inverted) {
-			if (_end < _time && _time <= MAX_TIME) _end = _time;
+			if (_time < MAX_TIME)  _end = _time;
 		} else {
-			if (_start > _time && _time > MIN_TIME) _start = _time;
+			if (_time >= MIN_TIME) _start = _time;
 		}
+	}
+
+	/// <summary>
+	/// Set the (relative) starting point of the recording buffer to the current time
+	/// </summary>
+	/// <param name="inverted"> 
+	/// If set, this will set the ending index to the current time.
+	/// Otherwise, this will set the starting index to the current time.
+	/// </param>
+	public void SetStartPoint(bool inverted) {
+		SetEndPoint(!inverted);
 	}
 
     public override string ToString()
