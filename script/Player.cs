@@ -27,14 +27,14 @@ public partial class Player : CharacterBody2D
 		_timeKeeper = GetNode<TimeKeeper>(Gamemag.TimeKeeperPath);
 	}
 
-    public override void _Process(double delta)
-    {
+	public override void _Process(double delta)
+	{
 		if (Input.IsActionJustPressed("debug.invert_time")) {
 			OnMirrorEnter(this);
 		}
-    }
+	}
 
-    public override void _PhysicsProcess(double delta)
+	public override void _PhysicsProcess(double delta)
 	{
 		Vector2 velocity = Velocity;
 

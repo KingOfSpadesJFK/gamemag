@@ -1,0 +1,32 @@
+[gd_scene load_steps=6 format=3 uid="uid://wuulwrn1sm63"]
+
+[ext_resource type="Script" path="res://script/Collectible.cs" id="1_memi7"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_tfmot"]
+
+[sub_resource type="Gradient" id="Gradient_kwy8e"]
+colors = PackedColorArray(0.806771, 0.577636, 0.168065, 1, 0.941644, 0.757723, 0.698707, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_d0e6r"]
+gradient = SubResource("Gradient_kwy8e")
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_i3g6y"]
+
+[node name="Collectible" type="Node2D"]
+script = ExtResource("1_memi7")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+position = Vector2(0, 1.90735e-06)
+scale = Vector2(18.0204, 18)
+mesh = SubResource("SphereMesh_tfmot")
+texture = SubResource("GradientTexture1D_d0e6r")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_i3g6y")
+debug_color = Color(0, 0.6, 0.701961, 0.419608)
+
+[connection signal="body_entered" from="Area2D" to="." method="OnCollected"]

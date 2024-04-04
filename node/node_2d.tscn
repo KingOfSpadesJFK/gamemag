@@ -1,9 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://dk0j5ogq6k0fa"]
+[gd_scene load_steps=11 format=3 uid="uid://dk0j5ogq6k0fa"]
 
 [ext_resource type="PackedScene" uid="uid://e4ry1tyldlu0" path="res://node/player.tscn" id="1_nx3aj"]
 [ext_resource type="Script" path="res://script/Camera.cs" id="2_0tpbi"]
 [ext_resource type="TileSet" uid="uid://j4ux3ux2igbt" path="res://tieset/test.tres" id="4_480it"]
 [ext_resource type="Script" path="res://script/ReversibleRigidBody2D.cs" id="4_j6ke0"]
+[ext_resource type="PackedScene" uid="uid://wuulwrn1sm63" path="res://node/collectible.tscn" id="5_4uhxm"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_omoqg"]
 size = Vector2(2, 184)
@@ -61,5 +62,8 @@ shape = SubResource("RectangleShape2D_ro23m")
 [node name="MeshInstance2D" type="MeshInstance2D" parent="ReversibleRigidBody2D"]
 scale = Vector2(32, 32)
 mesh = SubResource("BoxMesh_whasr")
+
+[node name="Collectible" parent="." instance=ExtResource("5_4uhxm")]
+position = Vector2(-1, -3)
 
 [connection signal="body_entered" from="Mirror" to="Player" method="OnMirrorEnter"]
