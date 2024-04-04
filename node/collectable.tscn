@@ -1,6 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://wuulwrn1sm63"]
+[gd_scene load_steps=6 format=3 uid="uid://cryvg3vq2g8od"]
 
-[ext_resource type="Script" path="res://script/Collectible.cs" id="1_memi7"]
+[ext_resource type="Script" path="res://script/Collectable.cs" id="1_6vxan"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_tfmot"]
 
@@ -12,8 +12,8 @@ gradient = SubResource("Gradient_kwy8e")
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_i3g6y"]
 
-[node name="Collectible" type="Node2D"]
-script = ExtResource("1_memi7")
+[node name="Collectable" type="Node2D"]
+script = ExtResource("1_6vxan")
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="."]
 position = Vector2(0, 1.90735e-06)
