@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://c8iwio3sux42q"]
+
+[ext_resource type="Script" path="res://script/Mirror.cs" id="1_jfc7e"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_omoqg"]
+size = Vector2(2, 184)
+
+[sub_resource type="BoxMesh" id="BoxMesh_eyrjt"]
+
+[node name="Mirror" type="Node2D"]
+position = Vector2(0, -366)
+script = ExtResource("1_jfc7e")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(0, 5)
+shape = SubResource("RectangleShape2D_omoqg")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Area2D"]
+position = Vector2(0.25, -10.5)
+scale = Vector2(1.5, 145)
+mesh = SubResource("BoxMesh_eyrjt")
+
+[connection signal="body_entered" from="Area2D" to="." method="OnBodyCrossing" flags=3]

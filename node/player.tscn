@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://e4ry1tyldlu0"]
+[gd_scene load_steps=5 format=3 uid="uid://e4ry1tyldlu0"]
 
 [ext_resource type="Script" path="res://script/Player.cs" id="1_n8lsw"]
 
@@ -6,6 +6,8 @@
 size = Vector2(14, 20)
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_5kg03"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_8pv0e"]
 
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 2
@@ -19,3 +21,9 @@ shape = SubResource("RectangleShape2D_th4tk")
 position = Vector2(0, -0.214998)
 scale = Vector2(14.43, 14.215)
 mesh = SubResource("CapsuleMesh_5kg03")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="MeshInstance2D"]
+position = Vector2(-0.830553, 0.0151247)
+rotation = 1.5708
+scale = Vector2(0.301403, 0.818349)
+mesh = SubResource("PrismMesh_8pv0e")

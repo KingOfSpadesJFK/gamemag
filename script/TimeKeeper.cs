@@ -6,10 +6,9 @@ using System.Linq;
 public partial class TimeKeeper : Node
 {
 	private const int MAX_MINUTE_TICKS = 3600;
-	private const int MAX_MINUTES = 10;
-	private const int STARTING_MINUTE = 5;
-	private const int TIMEOUT_MIN = 0;
-	private const int TIMEOUT_MAX = MAX_MINUTES * MAX_MINUTE_TICKS;
+	[Export] public int StartingTime = 5;
+	[Export] public int TimeLimitLower = 0;
+	[Export] public int TimeLimitUpper = 10;
 
 	public bool Inverted { get => _invert; }
 	public int RecordingCount { get => _recordingCount; }
@@ -17,9 +16,11 @@ public partial class TimeKeeper : Node
 	public int Minutes { get => _time / MAX_MINUTE_TICKS; }
 	public int Seconds { get => Ticks / 60; }
 	public int Ticks { get => _time % MAX_MINUTE_TICKS; }
-	public float TimeProgress { get => (float)_time / TIMEOUT_MAX; }
-	private int _time = STARTING_MINUTE * MAX_MINUTE_TICKS;
+	public float TimeProgress { get => (float)_time / (TimeLimitUpper * MAX_MINUTE_TICKS); }
+
+	private int _time = 0;
 	private bool _invert = false;
+	private bool _paused = false;
 	private int _recordingCount = 0;
 
 	[Signal] public delegate void InvertTimeEventHandler();
@@ -28,18 +29,21 @@ public partial class TimeKeeper : Node
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		_time = StartingTime * MAX_MINUTE_TICKS;
 	}
 
     // Every physics tick, update the time.
     public override void _PhysicsProcess(double delta)
 	{
-		if (_invert) {
-			_time--;
-		} else {
-			_time++;
+		if (!_paused) {
+			if (_invert) {
+				_time--;
+			} else {
+				_time++;
+			}
 		}
 
-		if (_time == TIMEOUT_MIN || _time == TIMEOUT_MAX) {
+		if (_time == TimeLimitLower * MAX_MINUTE_TICKS || _time == TimeLimitUpper * MAX_MINUTE_TICKS) {
 			EmitSignal(SignalName.Timeout);
 		}
 	}

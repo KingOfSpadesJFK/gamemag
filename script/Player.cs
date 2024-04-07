@@ -17,7 +17,7 @@ public partial class Player : CharacterBody2D
 
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
 	public float gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
-	private Recording<Vector2> _recording = new Recording<Vector2>();
+	private Recording<Vector2> _positionRecording = new Recording<Vector2>();
 	private static PackedScene _backwardsPlayerScene = ResourceLoader.Load<PackedScene>("res://node/backwards_player.tscn");
 	private static Vector2 _direction = new Vector2(0, 0);
 	private TimeKeeper _timeKeeper;
@@ -25,12 +25,15 @@ public partial class Player : CharacterBody2D
 	public override void _Ready()
 	{
 		_timeKeeper = GetNode<TimeKeeper>(Gamemag.TimeKeeperPath);
+		if (_timeKeeper is not null) {
+			_timeKeeper.InvertTime += OnTimeInversion;
+		}
 	}
 
 	public override void _Process(double delta)
 	{
 		if (Input.IsActionJustPressed("debug.invert_time")) {
-			OnMirrorEnter(this);
+			_timeKeeper?.Invert();
 		}
 	}
 
@@ -61,30 +64,38 @@ public partial class Player : CharacterBody2D
 			velocity.X = Mathf.MoveToward(Velocity.X, 0, 15);
 		}
 
+		// Flip the player sprite based on the direction.
+		if (_direction.X > 0)
+		{
+			GetNode<MeshInstance2D>("MeshInstance2D").Rotation = Mathf.Pi;
+		}
+		else
+		{
+			GetNode<MeshInstance2D>("MeshInstance2D").Rotation = 0.0f;
+		}
+
 		Velocity = velocity;
 		MoveAndSlide();
 
 		// Record the player's position every 1/60th of a second.
-		_recording.Append(Position);
+		_positionRecording.Append(Position);
 	}
 
-	private void OnMirrorEnter(Node2D body)
+	private void OnTimeInversion()
 	{
-		if (body is Player and not BackwardsPlayer) {
+		if (_timeKeeper is not null) {
+			// Prepare the recording to pass into the BackwardsPlayer.
+			_positionRecording.StartPlaybackAtEnding();
+			_positionRecording.Invert();
+
+			// Instantiate the BackwardsPlayer and pass the inverted recording to it.
 			var bPlayer = _backwardsPlayerScene.Instantiate<BackwardsPlayer>();
-			bPlayer.SetColor(_timeKeeper.Inverted);
-			bPlayer.SetRecording(_recording);
+			bPlayer.SetColor(!_timeKeeper.Inverted);
+			bPlayer.SetRecording(_positionRecording);
 			GetParent().AddChild(bPlayer);
+			_positionRecording = new Recording<Vector2>();
+			
 			Position += 5.0f * _direction;
-			// _timeKeeper.AddRecording(_recording);
-
-			_recording = new Recording<Vector2>();
-			_timeKeeper.Invert();
 		}
-	}
-
-	private void OnMirrorExit(Rid body_rid, Node2D body, long body_shape_index, long local_shape_index)
-	{
-		// GD.Print("Exited the mirror!");
 	}
 }

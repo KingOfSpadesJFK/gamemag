@@ -4,15 +4,16 @@ using System.Runtime.CompilerServices;
 
 public class Recording<T>
 {
-	// Tick Range: -36000 to 36000
-	private const int MAX_TIME = 36000;
-	private const int MIN_TIME = -36000;
-	private const int MAX_BUFFER_TICKS = 3600;
+	// Tick Range: 0 to 72000
+	private const int MAX_TIME = MAX_BUFFER_TICKS * MAX_BUFFER_MINUTES;
+	private const int MIN_TIME = -1;
+	private const int MAX_BUFFER_TICKS = MAX_TICKS_PER_SECOND * 60;
+	private const int MAX_TICKS_PER_SECOND = 60;
 	private const int MAX_BUFFER_MINUTES = 20;
 	private const int BUFFER_MID = 10;
 
 	public bool Inverted { get => _invert; }
-	public bool EndOfRecording { get => _time >= _end; }
+	public bool EndOfRecording   { get => _time >= _end;  }
 	public bool StartOfRecording { get => _time <= _start; }
 	public int TimeTicks { get => InTicks(_time); }
 	public int TimeMinutes { get => InMinutes(_time); }
@@ -21,10 +22,10 @@ public class Recording<T>
 	public int StartPoint { get => _start; }
 	public int EndPoint { get => _end; }	
 
-	private int _time = 0;
-	private int _end = 0;
-	private int _start = 0;
-	private T[][] _recordingBuffer = new T[MAX_BUFFER_MINUTES][];    // BUFFER_MID minutes
+	private int _time = BUFFER_MID * MAX_BUFFER_TICKS;
+	private int _end = BUFFER_MID * MAX_BUFFER_TICKS;
+	private int _start = BUFFER_MID * MAX_BUFFER_TICKS - 1;
+	private T[][] _recordingBuffer = new T[MAX_BUFFER_MINUTES][];
 	private bool _invert = false;
 
 	public Recording()
@@ -34,7 +35,7 @@ public class Recording<T>
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	private static int InTicks(int time) {
-		return (time % MAX_BUFFER_TICKS + MAX_BUFFER_TICKS) % MAX_BUFFER_TICKS;
+		return time % MAX_BUFFER_TICKS;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -43,24 +44,42 @@ public class Recording<T>
 	}
 
 	/// <summary>
-	///   Append data to the recording buffer
+	///   Append data to the (relative) end of the recording buffer
 	/// </summary>
 	/// <param name="data">The data to append to the buffer</param>
 	public void Append(T data) {
-		var minutes = TimeMinutes;
-		_recordingBuffer[TimeMinutes+BUFFER_MID][TimeTicks] = data;
-		TickUpdate(_invert);
-
-		// Create a new buffer for the next minute if it doesn't exist
-		if (TimeMinutes != minutes && _recordingBuffer[TimeMinutes+BUFFER_MID] is null) {
-			_recordingBuffer[TimeMinutes+BUFFER_MID] = new T[MAX_BUFFER_TICKS];
-		}
-
-		// Push back one of the end points if the index is out of bounds
-		if (!_invert) {
-			if (EndOfRecording   && _time <= MAX_TIME) _end = _time;
+		if (_invert) {
+			AppendAtStart(data);
 		} else {
-			if (StartOfRecording && _time >  MIN_TIME) _start = _time;
+			AppendAtEnd(data);
+		}
+	}
+
+	/// <summary>
+	///  Append data to the start of the recording buffer
+	/// </summary>
+	/// <param name="data"></param>
+	public void AppendAtStart(T data) {
+		if (_start > MIN_TIME) {
+			if (_recordingBuffer[InMinutes(_start)] is null) {
+				_recordingBuffer[InMinutes(_start)] = new T[MAX_BUFFER_TICKS];
+			}
+			_recordingBuffer[InMinutes(_start)][InTicks(_start)] = data;
+			_start--;
+		}
+	}
+
+	/// <summary>
+	///  Append data to the end of the recording buffer
+	/// </summary>
+	/// <param name="data"></param>
+	public void AppendAtEnd(T data) {
+		if (_end < MAX_TIME) {
+			if (_recordingBuffer[InMinutes(_end)] is null) {
+				_recordingBuffer[InMinutes(_end)] = new T[MAX_BUFFER_TICKS];
+			}
+			_recordingBuffer[InMinutes(_end)][InTicks(_end)] = data;
+			_end++;
 		}
 	}
 
@@ -73,20 +92,32 @@ public class Recording<T>
 	}
 
 	/// <summary>
-	///   Invert the time direction of the recording
+	///   Invert the playback direction of the recording
 	/// </summary>
 	public void Invert() {
 		_invert = !_invert;
 	}
 
+	/// <summary>
+	///  Get the data at the specified time
+	/// </summary>
+	/// <param name="minute">Minute of the specified time</param>
+	/// <param name="second">Second of the specified time</param>
+	/// <param name="tick">Subsecond tick of the specified time (60 ticks per minute)</param>
+	/// <returns></returns>
+	public T Get(int minute, int second, int tick) {
+		return Get(minute * MAX_BUFFER_TICKS + second * MAX_TICKS_PER_SECOND + tick);
+	}
+
+	/// <summary>
+	///  Get the data at the specified time
+	/// </summary>
+	/// <param name="time">The index to where the time is</param>
+	/// <returns></returns>
 	public T Get(int time) {
-		if (EndOfRecording) {
-			return _recordingBuffer[InMinutes(_end)+BUFFER_MID][InTicks(_end)];
-		}
-		if (StartOfRecording) {
-			return _recordingBuffer[InMinutes(_start)+BUFFER_MID][InTicks(_start)];
-		}
-		return _recordingBuffer[InMinutes(time)+BUFFER_MID][InTicks(time)];
+		if (time >= _end   || time >= MAX_TIME) return _recordingBuffer[InMinutes(_end-1)][InTicks(_end-1)];
+		if (time <= _start || time <= MIN_TIME) return _recordingBuffer[InMinutes(_start+1)][InTicks(_start+1)];
+		return _recordingBuffer[InMinutes(time)][InTicks(time)];
 	}
 
 	/// <summary>
@@ -94,9 +125,9 @@ public class Recording<T>
 	/// </summary>
 	/// <returns>The element at the next index</returns>
 	public T Next() {
-		var ret = Get(_time);
+		var data = Get(_time);
 		TickUpdate(_invert);
-		return ret;
+		return data;
 	}
 
 	/// <summary>
@@ -104,47 +135,69 @@ public class Recording<T>
 	/// </summary>
 	/// <returns>The element at the previous index</returns>
 	public T Previous() {
-		var ret = Get(_time);
+		var data = Get(_time);
 		TickUpdate(!_invert);
-		return ret;
+		return data;
 	}
 
 	public void Reset() {
-		_time = 0;
-		_end = -1;
-		_start = 0;
+		_time = BUFFER_MID * MAX_BUFFER_TICKS;
+		_end = BUFFER_MID * MAX_BUFFER_TICKS;
+		_start = BUFFER_MID * MAX_BUFFER_TICKS - 1;
 		_invert = false;
 	}
 
 	/// <summary>
-	/// Set the (relative) end point of the recording buffer to the current time
+	///  Set the (relative) end point of the recording buffer to the current time
 	/// </summary>
 	/// <param name="inverted"> 
-	/// If set, this will set the starting index to the current time.
-	/// Otherwise, this will set the ending index to the current time.
+	///  If set, this will set the starting index to the current time.
+	///  Otherwise, this will set the ending index to the current time.
 	/// </param>
 	public void SetEndPoint(bool inverted) {
 		GD.Print("Setting end point to " + _time + "!");
 		if (!inverted) {
-			if (_time < MAX_TIME)  _end = _time;
+			_end = _time;
 		} else {
-			if (_time >= MIN_TIME) _start = _time;
+			_start = _time;
 		}
 	}
 
 	/// <summary>
-	/// Set the (relative) starting point of the recording buffer to the current time
+	///  Set the (relative) starting point of the recording buffer to the current time
 	/// </summary>
 	/// <param name="inverted"> 
-	/// If set, this will set the ending index to the current time.
-	/// Otherwise, this will set the starting index to the current time.
+	///  If set, this will set the ending index to the current time.
+	///  Otherwise, this will set the starting index to the current time.
 	/// </param>
 	public void SetStartPoint(bool inverted) {
 		SetEndPoint(!inverted);
 	}
 
-    public override string ToString()
-    {
+	/// <summary>
+	///  Set the playback time to the (relative) start of the recording buffer
+	/// </summary>
+	public void StartPlaybackAtBeginning() {
+		if (!_invert) {
+			_time = _start;
+		} else {
+			_time = _end;
+		}
+	}
+
+	/// <summary>
+	///  Set the playback time to the (relative) end of the recording buffer
+	/// </summary>
+	public void StartPlaybackAtEnding() {
+		if (!_invert) {
+			_time = _end;
+		} else {
+			_time = _start;
+		}
+	}
+
+	public override string ToString()
+	{
 		return _recordingBuffer.ToString();
-    }
+	}
 }

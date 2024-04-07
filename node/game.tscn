@@ -1,9 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://cxy5j2fhypeid"]
+[gd_scene load_steps=7 format=3 uid="uid://cxy5j2fhypeid"]
 
 [ext_resource type="Script" path="res://script/Gamemag.cs" id="1_njikm"]
 [ext_resource type="PackedScene" uid="uid://dk0j5ogq6k0fa" path="res://node/node_2d.tscn" id="1_tlcgk"]
 [ext_resource type="Script" path="res://script/DebugHUD.cs" id="1_x82cr"]
-[ext_resource type="PackedScene" uid="uid://cwhnkv20axd2n" path="res://node/time_keeper.tscn" id="3_joja7"]
 [ext_resource type="Script" path="res://script/TimeHUD.cs" id="5_raqaj"]
 
 [sub_resource type="Gradient" id="Gradient_ddeqr"]
@@ -51,8 +50,6 @@ layout_mode = 0
 offset_right = 161.0
 offset_bottom = 48.0
 script = ExtResource("1_x82cr")
-
-[node name="TimeKeeper" parent="." instance=ExtResource("3_joja7")]
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="."]
 layout_mode = 0

@@ -10,7 +10,7 @@ using System;
 // yourself reverse.
 public partial class BackwardsPlayer : Player
 {
-	private Recording<Vector2> _recording;	// 60 ticks per second for 10 minutes
+	private Recording<Vector2> _positionRecording;	// 60 ticks per second for 10 minutes
 	private TimeKeeper _timeKeeper;
 
 	public override void _Ready()
@@ -21,12 +21,12 @@ public partial class BackwardsPlayer : Player
 
 	public override void _PhysicsProcess(double delta)
 	{
-		if (_recording.StartOfRecording || _recording.EndOfRecording) {
+		if (_positionRecording.StartOfRecording || _positionRecording.EndOfRecording) {
 			Hide();
 		} else {
 			Show();
 		}
-		Position = _recording.Next();
+		Position = _positionRecording.Next();
 	}
 
 	public void SetColor(bool inverted)
@@ -42,17 +42,11 @@ public partial class BackwardsPlayer : Player
 
 	public void SetRecording(Recording<Vector2> recording)
 	{
-		_recording = recording;
+		_positionRecording = recording;
 	}
 
 	private void OnTimeInversion()
 	{
-		_recording.Invert();
-	}
-
-	private void OnMirrorEnter(Node2D body)
-	{
-		GD.Print("BackwardsPlayer entered the mirror!");
-		QueueFree();
+		_positionRecording.Invert();
 	}
 }

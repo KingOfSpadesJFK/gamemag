@@ -7,7 +7,7 @@ using System;
 /// </summary>
 public partial class Gamemag : Node
 {
-	public static NodePath TimeKeeperPath = new NodePath("/root/Gamemag/TimeKeeper");
 	public static NodePath WorldRootPath = new NodePath("/root/Gamemag/SubViewportContainer/SubViewport/Node2D");
 	public static NodePath RootPath = new NodePath("/root/Gamemag");
+	public static NodePath TimeKeeperPath = new NodePath(WorldRootPath.ToString() + "/TimeKeeper");
 }
