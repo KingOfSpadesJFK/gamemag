@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://cyw66y6oaddlv"]
+[gd_scene load_steps=9 format=3 uid="uid://cyw66y6oaddlv"]
 
 [ext_resource type="Script" path="res://script/BackwardsPlayer.cs" id="1_bih44"]
 
@@ -18,11 +18,14 @@ colors = PackedColorArray(0, 0, 0.541176, 1, 0, 0, 1, 1)
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_k3fld"]
 gradient = SubResource("Gradient_n7tf3")
 
+[sub_resource type="PrismMesh" id="PrismMesh_c51xh"]
+
 [node name="BackwardsPlayer" type="CharacterBody2D"]
 collision_layer = 4
 script = ExtResource("1_bih44")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource("CapsuleShape2D_vpal4")
 
 [node name="RedShape" type="MeshInstance2D" parent="."]
@@ -35,3 +38,9 @@ visible = false
 scale = Vector2(14.43, 14.43)
 mesh = SubResource("CapsuleMesh_5kg03")
 texture = SubResource("GradientTexture1D_k3fld")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+position = Vector2(-13, 0)
+rotation = 1.57079
+scale = Vector2(4.89956, 12.2995)
+mesh = SubResource("PrismMesh_c51xh")

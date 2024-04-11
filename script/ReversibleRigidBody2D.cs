@@ -22,10 +22,10 @@ public partial class ReversibleRigidBody2D : RigidBody2D
 	//  from the recording buffer being outdated relative to the player
     public override void _PhysicsProcess(double delta)
 	{
-		GD.Print("Starting point: " + _transformBuffer.StartPoint + 
-				 ", End point: " + _transformBuffer.EndPoint +
-				 ", Current point: " + (_transformBuffer.TimeTicks + _transformBuffer.TimeMinutes * 3600) +
-				 ", Inverted: " + _transformBuffer.Inverted);
+		// GD.Print("Starting point: " + _transformBuffer.StartPoint + 
+		// 		 ", End point: " + _transformBuffer.EndPoint +
+		// 		 ", Current point: " + (_transformBuffer.TimeTicks + _transformBuffer.TimeMinutes * 3600) +
+		// 		 ", Inverted: " + _transformBuffer.Inverted);
 
 		// Check if the rigid body is colliding with something other than the tilemap.
 		//  If the rigid body is colliding with the player, start recording the rigid body's transform.

@@ -17,10 +17,11 @@ public partial class Player : CharacterBody2D
 
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
 	public float gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
-	private Recording<Vector2> _positionRecording = new Recording<Vector2>();
 	private static PackedScene _backwardsPlayerScene = ResourceLoader.Load<PackedScene>("res://node/backwards_player.tscn");
 	private static Vector2 _direction = new Vector2(0, 0);
 	private TimeKeeper _timeKeeper;
+	
+	private Recording<Vector2> _positionRecording = new Recording<Vector2>();
 
 	public override void _Ready()
 	{
