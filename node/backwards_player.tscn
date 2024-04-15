@@ -12,13 +12,13 @@ colors = PackedColorArray(0.545098, 0, 0, 1, 1, 0, 0, 1)
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_nspk3"]
 gradient = SubResource("Gradient_8p3oa")
 
+[sub_resource type="PrismMesh" id="PrismMesh_c51xh"]
+
 [sub_resource type="Gradient" id="Gradient_n7tf3"]
 colors = PackedColorArray(0, 0, 0.541176, 1, 0, 0, 1, 1)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_k3fld"]
 gradient = SubResource("Gradient_n7tf3")
-
-[sub_resource type="PrismMesh" id="PrismMesh_c51xh"]
 
 [node name="BackwardsPlayer" type="CharacterBody2D"]
 collision_layer = 4
@@ -33,14 +33,20 @@ scale = Vector2(14.43, 14.43)
 mesh = SubResource("CapsuleMesh_5kg03")
 texture = SubResource("GradientTexture1D_nspk3")
 
+[node name="MeshInstance2D" type="MeshInstance2D" parent="RedShape"]
+position = Vector2(-0.900901, 0)
+rotation = 1.57079
+scale = Vector2(0.33954, 0.852356)
+mesh = SubResource("PrismMesh_c51xh")
+
 [node name="BlueShape" type="MeshInstance2D" parent="."]
 visible = false
 scale = Vector2(14.43, 14.43)
 mesh = SubResource("CapsuleMesh_5kg03")
 texture = SubResource("GradientTexture1D_k3fld")
 
-[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
-position = Vector2(-13, 0)
+[node name="MeshInstance2D" type="MeshInstance2D" parent="BlueShape"]
+position = Vector2(-0.900901, 0)
 rotation = 1.57079
-scale = Vector2(4.89956, 12.2995)
+scale = Vector2(0.33954, 0.852356)
 mesh = SubResource("PrismMesh_c51xh")

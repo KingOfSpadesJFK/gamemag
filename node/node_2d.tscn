@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dk0j5ogq6k0fa"]
+[gd_scene load_steps=13 format=3 uid="uid://dk0j5ogq6k0fa"]
 
 [ext_resource type="PackedScene" uid="uid://e4ry1tyldlu0" path="res://node/player.tscn" id="1_nx3aj"]
 [ext_resource type="Script" path="res://script/Camera.cs" id="2_0tpbi"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://cryvg3vq2g8od" path="res://node/collectable.tscn" id="5_4uhxm"]
 [ext_resource type="PackedScene" uid="uid://c8iwio3sux42q" path="res://node/mirror.tscn" id="6_nr2ku"]
 [ext_resource type="PackedScene" uid="uid://cwhnkv20axd2n" path="res://node/time_keeper.tscn" id="7_fmay2"]
+[ext_resource type="Texture2D" uid="uid://ce75w14hajdyv" path="res://assets/baddie.png" id="8_y80su"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_cwd43"]
 
@@ -14,6 +15,9 @@
 size = Vector2(1, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_whasr"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1vxhp"]
+size = Vector2(16, 16)
 
 [node name="Node2D" type="Node2D"]
 
@@ -55,3 +59,13 @@ position = Vector2(-1, -3)
 [node name="TimeKeeper" parent="." instance=ExtResource("7_fmay2")]
 StartingTime = 1
 TimeLimitUpper = 2
+
+[node name="Baddie" type="CharacterBody2D" parent="."]
+position = Vector2(111, 40)
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Baddie"]
+shape = SubResource("RectangleShape2D_1vxhp")
+
+[node name="Sprite2D" type="Sprite2D" parent="Baddie"]
+texture = ExtResource("8_y80su")

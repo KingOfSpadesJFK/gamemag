@@ -1,6 +1,7 @@
 using Godot;
 using System;
 
+[GlobalClass]
 public partial class ReversibleRigidBody2D : RigidBody2D
 {
 	private Recording<Transform2D> _transformBuffer = new Recording<Transform2D>();

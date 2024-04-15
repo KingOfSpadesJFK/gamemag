@@ -65,8 +65,8 @@ public class Schedule<T> : ITimedData<T>
 				//  move the current start data to the next time index
 				if (!_schedule[nearest].Equals(data)) {
 					var backup = _schedule[nearest];
-					if (nearest == _start+1 && _schedule.ContainsKey(_start+1)) _schedule.Remove(_start+1);
-					if (nearest == _start   && _schedule.ContainsKey(_start)  ) _schedule.Remove(_start);
+					if (_schedule.ContainsKey(_start+1)) _schedule.Remove(_start+1);
+					if (_schedule.ContainsKey(_start)  ) _schedule.Remove(_start);
 					_schedule.Add(_start+1, backup);
 					_schedule.Add(_start, data);
 				}
@@ -88,7 +88,7 @@ public class Schedule<T> : ITimedData<T>
 			} else {
 				var nearest = FindNearestKey(_end);
 				if (!_schedule[nearest].Equals(data)) {
-					if (nearest == _end && _schedule.ContainsKey(_end)) _schedule.Remove(_end);
+					if (_schedule.ContainsKey(_end)) _schedule.Remove(_end);
 					_schedule.Add(_end, data);
 				}
 			}

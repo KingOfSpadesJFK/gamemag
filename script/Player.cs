@@ -20,8 +20,10 @@ public partial class Player : CharacterBody2D
 	private static PackedScene _backwardsPlayerScene = ResourceLoader.Load<PackedScene>("res://node/backwards_player.tscn");
 	private static Vector2 _direction = new Vector2(0, 0);
 	private TimeKeeper _timeKeeper;
+	private bool _facingLeft = false;
 	
 	private Recording<Vector2> _positionRecording = new Recording<Vector2>();
+	private Schedule<bool> _directionSchedule = new Schedule<bool>();
 
 	public override void _Ready()
 	{
@@ -59,6 +61,7 @@ public partial class Player : CharacterBody2D
 		{
 			velocity.X = direction.X * Speed;
 			_direction = direction;
+			_facingLeft = direction.X < 0;
 		}
 		else
 		{
@@ -66,7 +69,7 @@ public partial class Player : CharacterBody2D
 		}
 
 		// Flip the player sprite based on the direction.
-		if (_direction.X > 0)
+		if (!_facingLeft)
 		{
 			GetNode<MeshInstance2D>("MeshInstance2D").Rotation = Mathf.Pi;
 		}
@@ -80,21 +83,25 @@ public partial class Player : CharacterBody2D
 
 		// Record the player's position every 1/60th of a second.
 		_positionRecording.Append(Position);
+		_directionSchedule.Append(_facingLeft);
 	}
 
 	private void OnTimeInversion()
 	{
 		if (_timeKeeper is not null) {
-			// Prepare the recording to pass into the BackwardsPlayer.
+			// Prepare the recordings and schedules to pass into the BackwardsPlayer.
 			_positionRecording.StartPlaybackAtEnding();
 			_positionRecording.Invert();
+			_directionSchedule.StartPlaybackAtEnding();
+			_directionSchedule.Invert();
 
 			// Instantiate the BackwardsPlayer and pass the inverted recording to it.
 			var bPlayer = _backwardsPlayerScene.Instantiate<BackwardsPlayer>();
 			bPlayer.SetColor(!_timeKeeper.Inverted);
-			bPlayer.SetRecording(_positionRecording);
+			bPlayer.SetRecording(_positionRecording, _directionSchedule);
 			GetParent().AddChild(bPlayer);
 			_positionRecording = new Recording<Vector2>();
+			_directionSchedule = new Schedule<bool>();
 			
 			Position += 5.0f * _direction;
 		}
